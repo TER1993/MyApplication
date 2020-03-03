@@ -65,10 +65,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         btnFinish.setOnClickListener(this);
 
 
-        if (android.os.Build.MODEL.equalsIgnoreCase(getString(R.string.kt40))
-                || android.os.Build.MODEL.equalsIgnoreCase(getString(R.string.kt55))
-                || android.os.Build.MODEL.equalsIgnoreCase(getString(R.string.spda6735))
-                || android.os.Build.MODEL.equalsIgnoreCase(getString(R.string.kt40q))) {
+        if (android.os.Build.MODEL.equalsIgnoreCase(getString(R.string.sd60prt))) {
             Toast.makeText(mContext, "ok," + Build.MODEL
                     + getString(R.string.login_module_right), Toast.LENGTH_SHORT).show();
         } else {
