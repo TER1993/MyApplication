@@ -29,6 +29,9 @@ import android.widget.Toast;
 
 import com.printer.sdk.PrinterConstants;
 import com.printer.sdk.PrinterInstance;
+import com.spd.print.jx.impl.PrintImpl;
+import com.spd.print.jx.inter.IConnectCallback;
+import com.spd.print.jx.utils.ToastUtil;
 import com.speedata.xu.myapplication.R;
 import com.speedata.xu.myapplication.adapter.CommonAdapter;
 import com.speedata.xu.myapplication.adapter.ViewHolder;
@@ -206,12 +209,36 @@ public class CheckFirstFragment extends BaseFragment implements View.OnClickList
         });
 
 
+        initPrinter();
+    }
+
+    PrintImpl mPrint;
+
+    private void initPrinter() {
+        class ICallback implements IConnectCallback {
+            @Override
+            public void onPrinterConnectSuccess() {
+                //连接成功会被执行
+
+            }
+
+            @Override
+            public void onPrinterConnectFailed(int errorCode) {
+                //连接失败或者断开连接会被执行
+                ToastUtil.showShort(application, "PRT已断开");
+            }
+        }
+        //实例化对象
+        mPrint = new PrintImpl();
+        ICallback callback = new ICallback();
+        //连接打印机
+        mPrint.connectPrinter(callback);
     }
 
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+
         if (myPrinter != null) {
             myPrinter.closeConnection();
             myPrinter = null;
@@ -231,6 +258,11 @@ public class CheckFirstFragment extends BaseFragment implements View.OnClickList
         isConnected = false;
         PrefUtils.setBoolean(mActivity, GlobalContants.CONNECTSTATE, false);
 
+        if (mPrint != null) {
+            mPrint.closeConnect();
+        }
+
+        super.onDestroy();
     }
 
     private List<CheckInfor> getCheckListData() {
@@ -656,15 +688,19 @@ public class CheckFirstFragment extends BaseFragment implements View.OnClickList
                     break;
 
                 case DialogInterface.BUTTON_NEUTRAL://打印表单
-                    if (!isConnected) {
-                        Toast.makeText(mActivity, R.string.check_connect_fail, Toast.LENGTH_SHORT).show();
-                        mDialog.dismiss();
-                        return;
-                    }
+
                     String time = application.getCheckTime();
                     checkDetailInfors = checkDetailInforDao.imQueryList("CheckID=?", new String[]{time});
                     String name = application.getTxtName();
-                    PrintUtils.printTxt(name, checkDetailInfors, myPrinter);
+
+                    if (!isConnected) {
+                        //PRT
+                        com.speedata.xu.myapplication.print.prt.PrintUtils.printTxt(name, checkDetailInfors, mPrint);
+                    } else {
+                        //蓝牙打印机
+                        PrintUtils.printTxt(name, checkDetailInfors, myPrinter);
+                    }
+                    mDialog.dismiss();
 
                     Toast.makeText(mContext, R.string.check_print_success, Toast.LENGTH_SHORT).show();
                     break;

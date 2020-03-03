@@ -1,7 +1,8 @@
-package com.speedata.xu.myapplication.print.utils;
+package com.speedata.xu.myapplication.print.prt;
+
 
 import com.printer.sdk.PrinterConstants;
-import com.printer.sdk.PrinterInstance;
+import com.spd.print.jx.impl.PrintImpl;
 import com.speedata.xu.myapplication.db.bean.CheckDetailInfor;
 
 import java.util.List;
@@ -12,9 +13,9 @@ import java.util.List;
 public class PrintUtils {
 
 
-	public static void printTxt(String txtname, List<CheckDetailInfor> list, PrinterInstance mPrinter) {
+	public static void printTxt(String txtname, List<CheckDetailInfor> list, PrintImpl mPrinter) {
 		mPrinter.initPrinter();
-		mPrinter.setPrinter(PrinterConstants.Command.ALIGN, 0); //左
+		mPrinter.setPrinter(2, 0); //左
 		mPrinter.setFont(0, 1, 1, 0,0);
 		mPrinter.printText(txtname);
 		mPrinter.setFont(0, 0, 0, 0,0);
@@ -77,7 +78,7 @@ public class PrintUtils {
 				mPrinter.setPrinter(PrinterConstants.Command.PRINT_AND_WAKE_PAPER_BY_LINE, 1);
 				mPrinter.printText("数量:" + count + "            " + "价格:" + price);
 
-				mPrinter.setPrinter(PrinterConstants.Command.ALIGN, 0);
+				mPrinter.setPrinter(2, 0);
 				mPrinter.setPrinter(PrinterConstants.Command.PRINT_AND_WAKE_PAPER_BY_LINE, 1);
 
 			}
