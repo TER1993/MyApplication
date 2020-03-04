@@ -105,7 +105,7 @@ public class PrintUtils {
 		mPrinter.setPrinter(PrinterConstants.Command.PRINT_AND_WAKE_PAPER_BY_LINE, 1);
 		mPrinter.printText("  金额:" + ssumpri);
 		mPrinter.setFont(0,0, 0, 0, 0);
-		mPrinter.setPrinter(PrinterConstants.Command.PRINT_AND_WAKE_PAPER_BY_LINE, 3);
+		mPrinter.setPrinter(PrinterConstants.Command.PRINT_AND_WAKE_PAPER_BY_LINE, 5);
 	}
 
 

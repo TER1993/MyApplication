@@ -31,7 +31,6 @@ import com.printer.sdk.PrinterConstants;
 import com.printer.sdk.PrinterInstance;
 import com.spd.print.jx.impl.PrintImpl;
 import com.spd.print.jx.inter.IConnectCallback;
-import com.spd.print.jx.utils.ToastUtil;
 import com.speedata.xu.myapplication.R;
 import com.speedata.xu.myapplication.adapter.CommonAdapter;
 import com.speedata.xu.myapplication.adapter.ViewHolder;
@@ -219,13 +218,11 @@ public class CheckFirstFragment extends BaseFragment implements View.OnClickList
             @Override
             public void onPrinterConnectSuccess() {
                 //连接成功会被执行
-
             }
 
             @Override
             public void onPrinterConnectFailed(int errorCode) {
                 //连接失败或者断开连接会被执行
-                ToastUtil.showShort(application, "PRT已断开");
             }
         }
         //实例化对象
