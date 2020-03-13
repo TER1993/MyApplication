@@ -23,9 +23,10 @@ import com.speedata.xu.myapplication.application.CustomerApplication;
 import com.speedata.xu.myapplication.base.BaseFragment;
 import com.speedata.xu.myapplication.db.bean.BaseInfor;
 import com.speedata.xu.myapplication.db.dao.BaseInforDao;
-import com.speedata.xu.myapplication.utils.FileUtils;
+import com.speedata.xu.myapplication.utils.ExcelHelper;
 import com.speedata.xu.myapplication.utils.ProgressDialogUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -213,7 +214,10 @@ public class GoodsFragment extends BaseFragment implements View.OnClickListener 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final int acount = FileUtils.importBaseInforTxt(mContext, txtName);
+                //final int acount = FileUtils.importBaseInforTxt(mContext, txtName);
+                String txtName1 = CustomerApplication.getInstance().getString(R.string.path_import) + txtName + ".xls";
+                File file = new File(txtName1);
+                final int acount = ExcelHelper.readExcelFile(file);
                 Message msg = new Message();
                 msg.obj = acount;
                 handler.sendMessage(msg);

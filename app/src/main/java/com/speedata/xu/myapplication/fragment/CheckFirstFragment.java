@@ -31,6 +31,7 @@ import com.printer.sdk.PrinterConstants;
 import com.printer.sdk.PrinterInstance;
 import com.spd.print.jx.impl.PrintImpl;
 import com.spd.print.jx.inter.IConnectCallback;
+import com.speedata.libutils.excel.ExcelUtils;
 import com.speedata.xu.myapplication.R;
 import com.speedata.xu.myapplication.adapter.CommonAdapter;
 import com.speedata.xu.myapplication.adapter.ViewHolder;
@@ -57,6 +58,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import jxl.format.Colour;
 
 
 /**
@@ -650,18 +653,30 @@ public class CheckFirstFragment extends BaseFragment implements View.OnClickList
                 case DialogInterface.BUTTON_POSITIVE: // 导出表单
 
                     try {
-                        FileUtils fileUtils = new FileUtils();
-                        int h = fileUtils.outputfile(getOutputList(), createFilename());
-                        if (h == 1) {
+//                        FileUtils fileUtils = new FileUtils();
+//                        int h = fileUtils.outputfile(getOutputList(), createFilename());
 
-                            String outC = fileUtils.outCount + "";
+                        // TODO: 2020/3/13 导出excel数据,当前表格内容为空，不可用。
+                        ExcelUtils.getInstance()
+                                .setSHEET_NAME("Sheet1")//设置表格名称
+                                .setFONT_COLOR(Colour.BLUE)//设置标题字体颜色
+                                .setFONT_TIMES(8)//设置标题字体大小
+                                .setFONT_BOLD(true)//设置标题字体是否斜体
+                                .setBACKGROND_COLOR(Colour.GRAY_25)//设置标题背景颜色
+                                .setContent_list_Strings(getOutputList())//设置excel内容
+                                .setWirteExcelPath(createFilename())
+                                .createExcel(getActivity());
+
+                   //     if (h == 1) {
+
+                   //         String outC = fileUtils.outCount + "";
                             ExploreSure dialogButtonOnClickListener = new ExploreSure();
 
                             mDialog = new AlertDialog.Builder(mActivity)
-                                    .setTitle(getString(R.string.success_title) + outC)
+                                    .setTitle(getString(R.string.success_title) + "outC")
                                     .setPositiveButton(R.string.sure2, dialogButtonOnClickListener)
                                     .show();
-                        }
+                   //     }
 
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -940,8 +955,9 @@ public class CheckFirstFragment extends BaseFragment implements View.OnClickList
 
     //创建导出文件的名字
     public String createFilename() throws IOException {
-        return getString(R.string.export_path_) + application.getTxtName() + getString(R.string.txt);
-
+        //return getString(R.string.export_path_) + application.getTxtName() + getString(R.string.txt);
+        // TODO: 2020/3/13 修改输出文件名
+        return getString(R.string.export_path_) + application.getTxtName() + ".xls";
 
     }
 
