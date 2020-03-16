@@ -118,9 +118,9 @@ public class ToolCommon {
      */
     public static String getFormatData(long date) {
         final String FORMAT_SHORT = "yyyy-MM-dd HH:mm:ss";
-        if (date == 0)
+        if (date == 0) {
             return "";
-        else {
+        } else {
             SimpleDateFormat sdf = new SimpleDateFormat(FORMAT_SHORT, Locale.CHINA);
             return sdf.format(date);
         }

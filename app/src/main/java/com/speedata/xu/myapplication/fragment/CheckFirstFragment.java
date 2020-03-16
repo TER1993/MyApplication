@@ -19,7 +19,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,7 +30,6 @@ import com.printer.sdk.PrinterConstants;
 import com.printer.sdk.PrinterInstance;
 import com.spd.print.jx.impl.PrintImpl;
 import com.spd.print.jx.inter.IConnectCallback;
-import com.speedata.libutils.excel.ExcelUtils;
 import com.speedata.xu.myapplication.R;
 import com.speedata.xu.myapplication.adapter.CommonAdapter;
 import com.speedata.xu.myapplication.adapter.ViewHolder;
@@ -48,9 +46,10 @@ import com.speedata.xu.myapplication.print.utils.BluetoothDeviceList;
 import com.speedata.xu.myapplication.print.utils.GlobalContants;
 import com.speedata.xu.myapplication.print.utils.PrefUtils;
 import com.speedata.xu.myapplication.print.utils.PrintUtils;
-import com.speedata.xu.myapplication.utils.FileUtils;
+import com.speedata.xu.myapplication.utils.ExcelHelper;
 import com.speedata.xu.myapplication.utils.MyDateAndTime;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -58,8 +57,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import jxl.format.Colour;
 
 
 /**
@@ -82,7 +79,7 @@ public class CheckFirstFragment extends BaseFragment implements View.OnClickList
     protected static final String TAG = "蓝牙打印机";
     public static boolean isConnected = false; // 蓝牙连接状态
     private ProgressDialog dialog;
-    private ArrayAdapter<CharSequence> printType_adapter;
+    private ArrayAdapter<CharSequence> printTypeAdapter;
     private int printerId = 0;
     private BluetoothAdapter mBtAdapter;
     public static String devicesName = "未知设备";
@@ -143,9 +140,9 @@ public class CheckFirstFragment extends BaseFragment implements View.OnClickList
         btnDel.setText(R.string.onekey_del);
 
 
-        printType_adapter = ArrayAdapter.createFromResource(mActivity,
+        printTypeAdapter = ArrayAdapter.createFromResource(mActivity,
                 R.array.interface_type, android.R.layout.simple_spinner_item);
-        printType_adapter
+        printTypeAdapter
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 
@@ -168,46 +165,40 @@ public class CheckFirstFragment extends BaseFragment implements View.OnClickList
 
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        lvCheck.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        lvCheck.setOnItemClickListener((parent, view1, position, id) -> {
 
-                CheckInfor bean = checkInforList.get(position);
-                String checkTime = bean.getCheckTime();
+            CheckInfor bean = checkInforList.get(position);
+            String checkTime = bean.getCheckTime();
 
-                CheckFragment checkFragment = new CheckFragment();
-                Bundle bundle = new Bundle();
+            CheckFragment checkFragment = new CheckFragment();
+            Bundle bundle = new Bundle();
 
-                bundle.putString("CcheckTime", checkTime);
+            bundle.putString("CcheckTime", checkTime);
 
-                checkFragment.setArguments(bundle);
-                openFragment(checkFragment);
+            checkFragment.setArguments(bundle);
+            openFragment(checkFragment);
 
 
-            }
         });
 
-        lvCheck.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                CheckInfor bean = checkInforList.get(position);
-                String checktime = bean.getCheckTime();
-                String checkname = bean.getCheckName();
-                application.setTxtName(checkname);
-                application.setCheckTime(checktime);
+        lvCheck.setOnItemLongClickListener((parent, view12, position, id) -> {
+            CheckInfor bean = checkInforList.get(position);
+            String checktime = bean.getCheckTime();
+            String checkname = bean.getCheckName();
+            application.setTxtName(checkname);
+            application.setCheckTime(checktime);
 
 
-                DialogButtonOnLongClickListener dialogButtonOnClickListener = new DialogButtonOnLongClickListener();
+            DialogButtonOnLongClickListener dialogButtonOnClickListener = new DialogButtonOnLongClickListener();
 
-                mDialog = new AlertDialog.Builder(mActivity)
-                        .setTitle(R.string.check_title_dialog)
-                        .setNeutralButton(R.string.check_print, dialogButtonOnClickListener)
-                        .setPositiveButton(R.string.check_export, dialogButtonOnClickListener)
-                        .setNegativeButton(R.string.check_del, dialogButtonOnClickListener)
-                        .show();
+            mDialog = new AlertDialog.Builder(mActivity)
+                    .setTitle(R.string.check_title_dialog)
+                    .setNeutralButton(R.string.check_print, dialogButtonOnClickListener)
+                    .setPositiveButton(R.string.check_export, dialogButtonOnClickListener)
+                    .setNegativeButton(R.string.check_del, dialogButtonOnClickListener)
+                    .show();
 
-                return true;
-            }
+            return true;
         });
 
 
@@ -293,24 +284,21 @@ public class CheckFirstFragment extends BaseFragment implements View.OnClickList
                 //修改表单名称
                 TextView tvChange = helper.getView(R.id.inventory_change_tv);
 
-                tvChange.setOnClickListener(new TextView.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        bean = new CheckInfor();
-                        bean = checkInforList.get(position);
+                tvChange.setOnClickListener(v -> {
+                    bean = new CheckInfor();
+                    bean = checkInforList.get(position);
 
-                        CheckFirstFragment.DialogChangeButtonOnClickListener dialogButtonOnClickListener
-                                = new CheckFirstFragment.DialogChangeButtonOnClickListener();
-                        etCheckName = new EditText(mActivity);
-                        mDialog = new AlertDialog.Builder(mActivity)
-                                .setTitle(R.string.dialog_title_name)
-                                .setView(etCheckName)
-                                .setPositiveButton(R.string.dialog_sure, dialogButtonOnClickListener)
-                                .setNegativeButton(R.string.dialog_miss, dialogButtonOnClickListener)
-                                .show();
-                        etCheckName.append(bean.getCheckName());
+                    DialogChangeButtonOnClickListener dialogButtonOnClickListener
+                            = new DialogChangeButtonOnClickListener();
+                    etCheckName = new EditText(mActivity);
+                    mDialog = new AlertDialog.Builder(mActivity)
+                            .setTitle(R.string.dialog_title_name)
+                            .setView(etCheckName)
+                            .setPositiveButton(R.string.dialog_sure, dialogButtonOnClickListener)
+                            .setNegativeButton(R.string.dialog_miss, dialogButtonOnClickListener)
+                            .show();
+                    etCheckName.append(bean.getCheckName());
 
-                    }
                 });
 
             }
@@ -401,34 +389,27 @@ public class CheckFirstFragment extends BaseFragment implements View.OnClickList
                                     }
                                 })
                         .setNegativeButton(R.string.str_resel,
-                                new DialogInterface.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(
-                                            DialogInterface dialog,
-                                            int which) {
-                                        if (!(mBtAdapter == null)) {
-                                            // 判断设备蓝牙功能是否打开
-                                            if (!mBtAdapter.isEnabled()) {
-                                                // 打开蓝牙功能
-                                                Intent enableIntent = new Intent(
-                                                        BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                                                startActivity(enableIntent);
-                                                Intent intent = new Intent(
-                                                        mContext,
-                                                        BluetoothDeviceList.class);
-                                                startActivityForResult(
-                                                        intent,
-                                                        CONNECT_DEVICE);
-                                            } else {
-                                                Intent intent = new Intent(
-                                                        mContext,
-                                                        BluetoothDeviceList.class);
-                                                startActivityForResult(
-                                                        intent,
-                                                        CONNECT_DEVICE);
-
-                                            }
+                                (dialog, which) -> {
+                                    if (!(mBtAdapter == null)) {
+                                        // 判断设备蓝牙功能是否打开
+                                        if (!mBtAdapter.isEnabled()) {
+                                            // 打开蓝牙功能
+                                            Intent enableIntent = new Intent(
+                                                    BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                                            startActivity(enableIntent);
+                                            Intent intent = new Intent(
+                                                    mContext,
+                                                    BluetoothDeviceList.class);
+                                            startActivityForResult(
+                                                    intent,
+                                                    CONNECT_DEVICE);
+                                        } else {
+                                            Intent intent = new Intent(
+                                                    mContext,
+                                                    BluetoothDeviceList.class);
+                                            startActivityForResult(
+                                                    intent,
+                                                    CONNECT_DEVICE);
 
                                         }
 
@@ -598,6 +579,8 @@ public class CheckFirstFragment extends BaseFragment implements View.OnClickList
                     mDialog.dismiss();
                     closeDiaolg();
                     break;
+                default:
+                    break;
             }
         }
 
@@ -644,6 +627,34 @@ public class CheckFirstFragment extends BaseFragment implements View.OnClickList
 
 
     /**
+     * 由导出txt修改为导出excel表格
+     */
+    private int exportExcel(Context context) {
+
+        String filePath = null;
+        try {
+            filePath = createFilename();
+            new File(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        String[] title = {"商品编号", "数量"};
+        String sheetName = "Sheet1";
+
+        ExcelHelper.initExcel(filePath, sheetName, title);
+
+        List<OutputTxt> mList = getOutputList();
+
+        ExcelHelper.writeObjListToExcel(mList, filePath, context);
+
+        return mList.size();
+
+    }
+
+
+    /**
      * 长按item时的对话框的按钮点击事件
      */
     private class DialogButtonOnLongClickListener implements DialogInterface.OnClickListener {
@@ -653,32 +664,17 @@ public class CheckFirstFragment extends BaseFragment implements View.OnClickList
                 case DialogInterface.BUTTON_POSITIVE: // 导出表单
 
                     try {
-//                        FileUtils fileUtils = new FileUtils();
-//                        int h = fileUtils.outputfile(getOutputList(), createFilename());
+                        //导出excel表。
+                        int lines = exportExcel(mActivity);
 
-                        // TODO: 2020/3/13 导出excel数据,当前表格内容为空，不可用。
-                        ExcelUtils.getInstance()
-                                .setSHEET_NAME("Sheet1")//设置表格名称
-                                .setFONT_COLOR(Colour.BLUE)//设置标题字体颜色
-                                .setFONT_TIMES(8)//设置标题字体大小
-                                .setFONT_BOLD(true)//设置标题字体是否斜体
-                                .setBACKGROND_COLOR(Colour.GRAY_25)//设置标题背景颜色
-                                .setContent_list_Strings(getOutputList())//设置excel内容
-                                .setWirteExcelPath(createFilename())
-                                .createExcel(getActivity());
+                        ExploreSure dialogButtonOnClickListener = new ExploreSure();
 
-                   //     if (h == 1) {
+                        mDialog = new AlertDialog.Builder(mActivity)
+                                .setTitle(getString(R.string.success_title) + lines)
+                                .setPositiveButton(R.string.sure2, dialogButtonOnClickListener)
+                                .show();
 
-                   //         String outC = fileUtils.outCount + "";
-                            ExploreSure dialogButtonOnClickListener = new ExploreSure();
-
-                            mDialog = new AlertDialog.Builder(mActivity)
-                                    .setTitle(getString(R.string.success_title) + "outC")
-                                    .setPositiveButton(R.string.sure2, dialogButtonOnClickListener)
-                                    .show();
-                   //     }
-
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
@@ -687,7 +683,6 @@ public class CheckFirstFragment extends BaseFragment implements View.OnClickList
                 case DialogInterface.BUTTON_NEGATIVE: // 删除表单
                     // 取消显示对话框
                     mDialog.dismiss();
-
 
                     DelBeforeSure dialogButtonOnClickListener = new DelBeforeSure();
 
@@ -742,7 +737,8 @@ public class CheckFirstFragment extends BaseFragment implements View.OnClickList
                     mDialog.dismiss();
 
                     break;
-
+                default:
+                    break;
             }
         }
     }
@@ -769,7 +765,8 @@ public class CheckFirstFragment extends BaseFragment implements View.OnClickList
                     mDialog.dismiss();
 
                     break;
-
+                default:
+                    break;
             }
         }
     }
@@ -800,7 +797,8 @@ public class CheckFirstFragment extends BaseFragment implements View.OnClickList
                     mDialog.dismiss();
 
                     break;
-
+                default:
+                    break;
             }
         }
     }
@@ -824,15 +822,15 @@ public class CheckFirstFragment extends BaseFragment implements View.OnClickList
                         application.setCheckTime(checktime);
 
                         try {
-                            FileUtils fileUtils = new FileUtils();
-                            int h = fileUtils.outputfile(getOutputList(), createFilename());
-                            if (h == 1) {
+                            //导出excel表
+                            int h = exportExcel(mActivity);
+                            if (h != 0) {
                                 if (i == c - 1) {
                                     b = true;
                                 }
                             }
 
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -931,7 +929,7 @@ public class CheckFirstFragment extends BaseFragment implements View.OnClickList
     //显示与关闭dialog
     public void openDiaolg() {
         try {
-            Field field = mDialog.getClass().getSuperclass().getDeclaredField("mShowing");
+            Field field = Objects.requireNonNull(mDialog.getClass().getSuperclass()).getDeclaredField("mShowing");
             field.setAccessible(true);
             //   将mShowing变量设为false，表示对话框已关闭
             field.set(mDialog, false); //不关闭对话框
@@ -943,7 +941,7 @@ public class CheckFirstFragment extends BaseFragment implements View.OnClickList
     //显示与关闭dialog
     public void closeDiaolg() {
         try {
-            Field field = mDialog.getClass().getSuperclass().getDeclaredField("mShowing");
+            Field field = Objects.requireNonNull(mDialog.getClass().getSuperclass()).getDeclaredField("mShowing");
             field.setAccessible(true);
             //   将mShowing变量设为false，表示对话框已关闭
             field.set(mDialog, true); //关闭对话框
@@ -955,8 +953,7 @@ public class CheckFirstFragment extends BaseFragment implements View.OnClickList
 
     //创建导出文件的名字
     public String createFilename() throws IOException {
-        //return getString(R.string.export_path_) + application.getTxtName() + getString(R.string.txt);
-        // TODO: 2020/3/13 修改输出文件名
+        // 修改输出文件为xls文件
         return getString(R.string.export_path_) + application.getTxtName() + ".xls";
 
     }
@@ -969,16 +966,20 @@ public class CheckFirstFragment extends BaseFragment implements View.OnClickList
         List<OutputTxt> outputTxts = new ArrayList<>();
 
         for (int i = 0; i < checkDetailInfors.size(); i++) {
-            bean = checkDetailInfors.get(i);
-            OutputTxt obean = new OutputTxt();
 
-            obean.setGoodsnumber(bean.getGoodsNum());
-            obean.setTab("\t");
-            obean.setGoodscount(bean.getGoodsCount());
-            obean.setEnter("\n");
-            outputTxts.add(obean);
-            if (bean.getGoodsNum().length() == 3) {
-                outputTxts.remove(obean);
+            bean = checkDetailInfors.get(i);
+
+            if (!(bean.getGoodsNum().length() == 2 && "0".equals(bean.getGoodsCount()))) {
+
+                OutputTxt obean = new OutputTxt();
+                obean.setGoodsnumber(bean.getGoodsNum());
+                obean.setTab("\t");
+                obean.setGoodscount(bean.getGoodsCount());
+                obean.setEnter("\n");
+                outputTxts.add(obean);
+                if (bean.getGoodsNum().length() == 3) {
+                    outputTxts.remove(obean);
+                }
             }
         }
 

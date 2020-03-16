@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -16,14 +15,10 @@ import com.speedata.xu.myapplication.adapter.CommonAdapter;
 import com.speedata.xu.myapplication.adapter.ViewHolder;
 import com.speedata.xu.myapplication.application.CustomerApplication;
 import com.speedata.xu.myapplication.base.BaseFragment;
-import com.speedata.xu.myapplication.db.bean.CheckDetailInfor;
 import com.speedata.xu.myapplication.db.bean.CheckInfor;
-import com.speedata.xu.myapplication.db.bean.OutputTxt;
 import com.speedata.xu.myapplication.db.dao.CheckDetailInforDao;
 import com.speedata.xu.myapplication.db.dao.CheckInforDao;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -83,53 +78,41 @@ public class ChangeFirstFragment extends BaseFragment implements View.OnClickLis
         setAdapterMethod();
 
 
-        lvCheck.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        lvCheck.setOnItemClickListener((parent, view1, position, id) -> {
 
 
-                CheckInfor bean = checkInforList.get(position);
-                String checkTime = bean.getCheckTime();
+            CheckInfor bean = checkInforList.get(position);
+            String checkTime = bean.getCheckTime();
 
-                ChangeFragment changeFragment = new ChangeFragment();
-                Bundle bundle = new Bundle();
+            ChangeFragment changeFragment = new ChangeFragment();
+            Bundle bundle = new Bundle();
 
-                bundle.putString("C2checkTime", checkTime);
-                bundle.putString("C2checkName", bean.getCheckName());
+            bundle.putString("C2checkTime", checkTime);
+            bundle.putString("C2checkName", bean.getCheckName());
 
-                changeFragment.setArguments(bundle);
-                openFragment(changeFragment);
+            changeFragment.setArguments(bundle);
+            openFragment(changeFragment);
 
 
-            }
         });
 
 
-        lvCheck.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                CheckInfor bean = checkInforList.get(position);
-                String checktime = bean.getCheckTime();
-                String checkname = bean.getCheckName();
-                application.setTxtName(checkname);
-                application.setCheckTime(checktime);
+        lvCheck.setOnItemLongClickListener((parent, view12, position, id) -> {
+            CheckInfor bean = checkInforList.get(position);
+            String checktime = bean.getCheckTime();
+            String checkname = bean.getCheckName();
+            application.setTxtName(checkname);
+            application.setCheckTime(checktime);
 
-                DialogButtonOnLongClickListener dialogButtonOnClickListener = new DialogButtonOnLongClickListener();
+            DialogButtonOnLongClickListener dialogButtonOnClickListener = new DialogButtonOnLongClickListener();
 
-//                mDialog = new AlertDialog.Builder(mActivity)
-//                        .setTitle(R.string.change_list_dialog)
-//                        .setPositiveButton(R.string.change_export_button, dialogButtonOnClickListener)
-//                        .setNegativeButton(R.string.change_del_button, dialogButtonOnClickListener)
-//                        .show();
-
-                mDialog = new AlertDialog.Builder(mActivity)
-                        .setTitle(R.string.dialog_change)
-                        .setPositiveButton(R.string.dialog_return, dialogButtonOnClickListener)
-                        .show();
+            mDialog = new AlertDialog.Builder(mActivity)
+                    .setTitle(R.string.dialog_change)
+                    .setPositiveButton(R.string.dialog_return, dialogButtonOnClickListener)
+                    .show();
 
 
-                return true;
-            }
+            return true;
         });
 
     }
@@ -187,17 +170,6 @@ public class ChangeFirstFragment extends BaseFragment implements View.OnClickLis
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE: // 导出表单
 
-//                    try {
-//                        FileUtils fileUtils = new FileUtils();
-//                        int h = fileUtils.outputfile(getOutputList(), createFilename());
-//                        if (h == 1) {
-//                            Toast.makeText(mContext, R.string.change_export_success, Toast.LENGTH_SHORT).show();
-//                        }
-//
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-
                     mDialog.dismiss();
 
                     break;
@@ -213,33 +185,6 @@ public class ChangeFirstFragment extends BaseFragment implements View.OnClickLis
                     break;
             }
         }
-    }
-
-
-    //得到需要导出的文件List<>
-    private List<OutputTxt> getOutputList() {
-        String time = application.getCheckTime();
-        List<CheckDetailInfor> checkDetailInfors = checkDetailInforDao.imQueryList("CheckID=?", new String[]{time});
-        CheckDetailInfor bean;
-        List<OutputTxt> outputTxts = new ArrayList<>();
-        for (int i = 0; i < checkDetailInfors.size(); i++) {
-            bean = checkDetailInfors.get(i);
-            OutputTxt obean = new OutputTxt();
-            obean.setGoodsnumber(bean.getGoodsNum());
-            obean.setTab("\t");
-            obean.setGoodscount(bean.getGoodsCount());
-            obean.setEnter("\n");
-            outputTxts.add(obean);
-        }
-
-        return outputTxts;
-    }
-
-    //创建导出文件的名字
-    private String createFilename() throws IOException {
-
-        return getString(R.string.export_path_) + application.getTxtName() + getString(R.string.txt);
-
     }
 
 

@@ -9,10 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,6 +21,9 @@ import com.speedata.xu.myapplication.R;
 import java.util.Set;
 
 
+/**
+ * @author xuyan
+ */
 public class BluetoothDeviceList extends Activity {
 	private static final String TAG = "DeviceListActivity";
 	public static String EXTRA_DEVICE_ADDRESS = "device_address";
@@ -50,29 +50,20 @@ public class BluetoothDeviceList extends Activity {
 	}
 
 	private void initView() {
-		scanButton = (Button) findViewById(R.id.button_scan);
-		scanButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				doDiscovery();
-				v.setEnabled(false);
-			}
+		scanButton = findViewById(R.id.button_scan);
+		scanButton.setOnClickListener(v -> {
+			doDiscovery();
+			v.setEnabled(false);
 		});
 
-		Button backButton = (Button) findViewById(R.id.button_bace);
-		backButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-                 finish();
-			}
-
-		});
+		Button backButton = findViewById(R.id.button_bace);
+		backButton.setOnClickListener(v -> finish());
 
 
 		mPairedDevicesArrayAdapter = new ArrayAdapter<>(this,
 				R.layout.device_item);
 
-		pairedListView = (ListView) findViewById(R.id.paired_devices);
+		pairedListView = findViewById(R.id.paired_devices);
 		pairedListView.setAdapter(mPairedDevicesArrayAdapter);
 		pairedListView.setOnItemClickListener(mDeviceClickListener);
 
@@ -128,28 +119,26 @@ public class BluetoothDeviceList extends Activity {
 		mBtAdapter.startDiscovery();
 	}
 
-	private void returnToPreviousActivity(String address, boolean re_pair,String name) {
+	private void returnToPreviousActivity(String address, boolean repair, String name) {
 		if (mBtAdapter.isDiscovering()) {
 			mBtAdapter.cancelDiscovery();
 		}
 
 		Intent intent = new Intent();
 		intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
-		intent.putExtra(EXTRA_RE_PAIR, re_pair);
+		intent.putExtra(EXTRA_RE_PAIR, repair);
 		intent.putExtra(EXTRA_DEVICE_NAME, name);
 
 		setResult(Activity.RESULT_OK, intent);
 		finish();
 	}
 
-	private OnItemClickListener mDeviceClickListener = new OnItemClickListener() {
-		public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {
+	private OnItemClickListener mDeviceClickListener = (av, v, arg2, arg3) -> {
 
-			String info = ((TextView) v).getText().toString();
-			String address = info.substring(info.length() - 17);
-			String name = info.substring(0,info.length() - 17);
-			returnToPreviousActivity(address, false,name);
-		}
+		String info = ((TextView) v).getText().toString();
+		String address = info.substring(info.length() - 17);
+		String name = info.substring(0,info.length() - 17);
+		returnToPreviousActivity(address, false,name);
 	};
 
 

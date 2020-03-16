@@ -14,7 +14,7 @@ public class PrintUtils {
 
 	public static void printTxt(String txtname, List<CheckDetailInfor> list, PrinterInstance mPrinter) {
 		mPrinter.initPrinter();
-		mPrinter.setPrinter(PrinterConstants.Command.ALIGN, 0); //左
+		mPrinter.setPrinter(2, 0); //左
 		mPrinter.setFont(0, 1, 1, 0,0);
 		mPrinter.printText(txtname);
 		mPrinter.setFont(0, 0, 0, 0,0);
@@ -77,7 +77,7 @@ public class PrintUtils {
 				mPrinter.setPrinter(PrinterConstants.Command.PRINT_AND_WAKE_PAPER_BY_LINE, 1);
 				mPrinter.printText("数量:" + count + "            " + "价格:" + price);
 
-				mPrinter.setPrinter(PrinterConstants.Command.ALIGN, 0);
+				mPrinter.setPrinter(2, 0);
 				mPrinter.setPrinter(PrinterConstants.Command.PRINT_AND_WAKE_PAPER_BY_LINE, 1);
 
 			}
@@ -104,7 +104,7 @@ public class PrintUtils {
 		mPrinter.setPrinter(PrinterConstants.Command.PRINT_AND_WAKE_PAPER_BY_LINE, 1);
 		mPrinter.printText("  金额:" + ssumpri);
 		mPrinter.setFont(0,0, 0, 0, 0);
-		mPrinter.setPrinter(PrinterConstants.Command.PRINT_AND_WAKE_PAPER_BY_LINE, 3);
+		mPrinter.setPrinter(PrinterConstants.Command.PRINT_AND_WAKE_PAPER_BY_LINE, 5);
 	}
 
 

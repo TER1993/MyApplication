@@ -1,6 +1,5 @@
 package com.speedata.xu.myapplication.base;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -11,13 +10,10 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.speedata.xu.myapplication.MainActivity;
 import com.speedata.xu.myapplication.R;
-
-import java.lang.reflect.Method;
 
 
 /**
@@ -98,40 +94,6 @@ public abstract class BaseFragment extends Fragment implements IBaseFragment {
             mToast.cancel();
         }
         super.onDestroyView();
-    }
-
-    /**
-     * 显示Toast
-     *
-     * @param msg
-     */
-    @SuppressLint("ShowToast")
-    public void showToast(String msg) {
-        if (mToast == null) {
-            mToast = Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT); // getApplicationContext()
-        } else {
-            mToast.setText(msg);
-            mToast.setDuration(Toast.LENGTH_SHORT);
-        }
-
-        mToast.show();
-    }
-
-    /**
-     * 隐藏隐藏输入框焦点
-     *
-     * @param editText
-     */
-    public void hideEdInput(EditText editText) {
-        try {
-            Class<EditText> cls = EditText.class;
-            Method setShowSoftInputOnFocus;
-            setShowSoftInputOnFocus = cls.getMethod("setShowSoftInputOnFocus", boolean.class);
-            setShowSoftInputOnFocus.setAccessible(true);
-            setShowSoftInputOnFocus.invoke(editText, false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 

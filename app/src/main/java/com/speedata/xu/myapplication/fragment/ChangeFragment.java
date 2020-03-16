@@ -212,91 +212,82 @@ public class ChangeFragment extends BaseScanFragment implements View.OnClickList
 
                 TextView tvAdd = helper.getView(R.id.check_add_tv);
 
-                tvAdd.setOnClickListener(new TextView.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                tvAdd.setOnClickListener(v -> {
 
-                        CheckDetailInfor bean;
-                        bean = checkDetailInfors.get(position);
-                        String count = bean.getGoodsCount();
-                        //判断String字符串是否为数字，否则不支持加减操作
-                        if (!ToolCommon.isNumeric(count)) {
-                            Toast.makeText(mContext, "此数量的格式，不支持加减操作", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        int b = Integer.parseInt(count);
-                        b++;
-                        count = b + "";
-                        bean.setGoodsCount(count);
-                        bean.setCheckDetailTime(time);
-                        checkDetailInfors.get(position).setGoodsCount(count);
-                        checkDetailInfors.get(position).setCheckDetailTime(time);
-                        String c = checkDetailInfors.size() + "";
-                        tvDetailed.setText(c);
-                        helper.setText(R.id.check_time_tv, item.getCheckDetailTime());
-                        helper.setText(R.id.check_sum_tv, item.getGoodsCount());
-                        tvNumberCount.setText(count);
-
+                    CheckDetailInfor bean;
+                    bean = checkDetailInfors.get(position);
+                    String count = bean.getGoodsCount();
+                    //判断String字符串是否为数字，否则不支持加减操作
+                    if (!ToolCommon.isNumeric(count)) {
+                        Toast.makeText(mContext, "此数量的格式，不支持加减操作", Toast.LENGTH_SHORT).show();
+                        return;
                     }
+                    int b = Integer.parseInt(count);
+                    b++;
+                    count = b + "";
+                    bean.setGoodsCount(count);
+                    bean.setCheckDetailTime(time);
+                    checkDetailInfors.get(position).setGoodsCount(count);
+                    checkDetailInfors.get(position).setCheckDetailTime(time);
+                    String c = checkDetailInfors.size() + "";
+                    tvDetailed.setText(c);
+                    helper.setText(R.id.check_time_tv, item.getCheckDetailTime());
+                    helper.setText(R.id.check_sum_tv, item.getGoodsCount());
+                    tvNumberCount.setText(count);
+
                 });
 
 
                 TextView tvSub = helper.getView(R.id.check_sub_tv);
 
-                tvSub.setOnClickListener(new TextView.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                tvSub.setOnClickListener(v -> {
 
-                        CheckDetailInfor bean;
-                        bean = checkDetailInfors.get(position);
-                        String count = bean.getGoodsCount();
-                        //判断String字符串是否为数字，否则不支持加减操作
-                        if (!ToolCommon.isNumeric(count)) {
-                            Toast.makeText(mContext, "此数量的格式，不支持加减操作", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        int b = Integer.parseInt(count);
-                        if (b == 0) {
-                            Toast.makeText(mContext, "货品数量不能小于0", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        b--;
-                        count = b + "";
-                        bean.setGoodsCount(count);
-                        bean.setCheckDetailTime(time);
-                        checkDetailInfors.get(position).setGoodsCount(count);
-                        checkDetailInfors.get(position).setCheckDetailTime(time);
-                        helper.setText(R.id.check_time_tv, item.getCheckDetailTime());
-                        helper.setText(R.id.check_sum_tv, item.getGoodsCount());
-                        String d = checkDetailInfors.size() + "";
-                        tvDetailed.setText(d);
-                        tvNumberCount.setText(count);
-
-
+                    CheckDetailInfor bean;
+                    bean = checkDetailInfors.get(position);
+                    String count = bean.getGoodsCount();
+                    //判断String字符串是否为数字，否则不支持加减操作
+                    if (!ToolCommon.isNumeric(count)) {
+                        Toast.makeText(mContext, "此数量的格式，不支持加减操作", Toast.LENGTH_SHORT).show();
+                        return;
                     }
+                    int b = Integer.parseInt(count);
+                    if (b == 0) {
+                        Toast.makeText(mContext, "货品数量不能小于0", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    b--;
+                    count = b + "";
+                    bean.setGoodsCount(count);
+                    bean.setCheckDetailTime(time);
+                    checkDetailInfors.get(position).setGoodsCount(count);
+                    checkDetailInfors.get(position).setCheckDetailTime(time);
+                    helper.setText(R.id.check_time_tv, item.getCheckDetailTime());
+                    helper.setText(R.id.check_sum_tv, item.getGoodsCount());
+                    String d = checkDetailInfors.size() + "";
+                    tvDetailed.setText(d);
+                    tvNumberCount.setText(count);
+
+
                 });
 
                 TextView tvDelete = helper.getView(R.id.check_delete_tv);
 
-                tvDelete.setOnClickListener(new TextView.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                tvDelete.setOnClickListener(v -> {
 
-                        CheckDetailInfor bean;
+                    CheckDetailInfor bean;
 
-                        bean = checkDetailInfors.get(position);
-                        application.setCheckDetailInfo2(bean);
+                    bean = checkDetailInfors.get(position);
+                    application.setCheckDetailInfo2(bean);
 
-                        DialogButtonOnClickListener dialogButtonOnClickListener = new DialogButtonOnClickListener();
+                    DialogButtonOnClickListener dialogButtonOnClickListener = new DialogButtonOnClickListener();
 
-                        mDialog = new AlertDialog.Builder(mActivity)
-                                .setTitle(R.string.change_title_dialog)
-                                .setPositiveButton(R.string.change_sure, dialogButtonOnClickListener)
-                                .setNegativeButton(R.string.change_miss, dialogButtonOnClickListener)
-                                .show();
-                        lvchange.setSelection(position);
+                    mDialog = new AlertDialog.Builder(mActivity)
+                            .setTitle(R.string.change_title_dialog)
+                            .setPositiveButton(R.string.change_sure, dialogButtonOnClickListener)
+                            .setNegativeButton(R.string.change_miss, dialogButtonOnClickListener)
+                            .show();
+                    lvchange.setSelection(position);
 
-                    }
                 });
 
                 TextView tvPrice = helper.getView(R.id.check_price_tv);
@@ -357,6 +348,8 @@ public class ChangeFragment extends BaseScanFragment implements View.OnClickList
                     // 取消显示对话框
                     mDialog.dismiss();
 
+                    break;
+                default:
                     break;
             }
         }

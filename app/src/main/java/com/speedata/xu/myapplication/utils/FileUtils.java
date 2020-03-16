@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- *
+ *  原导出txt文件的工具类
  * @author xu
  * @date 2016/4/18
  */
@@ -96,9 +96,9 @@ public class FileUtils {
 
     /**
      *    盘点单列表--导出
-     * @param list
-     * @param filename
-     * @return
+     * @param list  要导出的数据
+     * @param filename  文件名
+     * @return  状态
      */
     public int outputfile(List<OutputTxt> list, String filename) {
         outCount = 0;
@@ -108,9 +108,8 @@ public class FileUtils {
             for (int i = 0; i < list.size(); i++) {
             //拿字符串
                 OutputTxt str = list.get(i);
-                if (str.getGoodsnumber().length() == 2 && "0".equals(str.getGoodscount())) {
+                if (!(str.getGoodsnumber().length() == 2 && "0".equals(str.getGoodscount()))) {
 
-                } else {
                     outCount++;
                     String over = str.getGoodsnumber() + "  " + str.getGoodscount() + "\r\n";
                     // 写文件

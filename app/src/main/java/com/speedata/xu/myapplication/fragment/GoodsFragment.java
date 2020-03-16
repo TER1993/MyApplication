@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -78,28 +77,25 @@ public class GoodsFragment extends BaseFragment implements View.OnClickListener 
         setAdapterMethod();
 
 
-        lvgoods.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        lvgoods.setOnItemClickListener((parent, view1, position, id) -> {
 
-                BaseInfor bean = goodsDetialList.get(position);
-                application.setAposition(position);
-                String number = bean.getGoodsNum();
-                String name = bean.getGoodsName();
-                String price = bean.getGoodsPrice();
-                String count = bean.getGoodsCount();
-                GoodsMessageFragment goodsMessageFragment = new GoodsMessageFragment();
-                Bundle bundle = new Bundle();
+            BaseInfor bean = goodsDetialList.get(position);
+            application.setAposition(position);
+            String number = bean.getGoodsNum();
+            String name = bean.getGoodsName();
+            String price = bean.getGoodsPrice();
+            String count = bean.getGoodsCount();
+            GoodsMessageFragment goodsMessageFragment = new GoodsMessageFragment();
+            Bundle bundle = new Bundle();
 
-                bundle.putString("Gnumber", number);
-                bundle.putString("Gname", name);
-                bundle.putString("Gprice", price);
-                bundle.putString("Gcount", count);
-                goodsMessageFragment.setArguments(bundle);
-                openFragment(goodsMessageFragment);
+            bundle.putString("Gnumber", number);
+            bundle.putString("Gname", name);
+            bundle.putString("Gprice", price);
+            bundle.putString("Gcount", count);
+            goodsMessageFragment.setArguments(bundle);
+            openFragment(goodsMessageFragment);
 
 
-            }
         });
     }
 
@@ -130,17 +126,14 @@ public class GoodsFragment extends BaseFragment implements View.OnClickListener 
     private List<BaseInfor> getFirstGoodsData() {
         ProgressDialogUtils.showProgressDialog(mActivity, getString(R.string.good_is_loading));
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                goodsDetialList = baseInforDao.imQueryList();
+        new Thread(() -> {
+            goodsDetialList = baseInforDao.imQueryList();
 
-                application.setBaseInfo2(goodsDetialList);
+            application.setBaseInfo2(goodsDetialList);
 
-                Message msg = new Message();
-                msg.obj = 1;
-                ahandler.sendMessage(msg);
-            }
+            Message msg = new Message();
+            msg.obj = 1;
+            ahandler.sendMessage(msg);
         }).start();
 
 
@@ -211,17 +204,14 @@ public class GoodsFragment extends BaseFragment implements View.OnClickListener 
 
         ProgressDialogUtils.showProgressDialog(mActivity, getString(R.string.good_is_import));
         baseInforDao.imDeleteAll();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //final int acount = FileUtils.importBaseInforTxt(mContext, txtName);
-                String txtName1 = CustomerApplication.getInstance().getString(R.string.path_import) + txtName + ".xls";
-                File file = new File(txtName1);
-                final int acount = ExcelHelper.readExcelFile(file);
-                Message msg = new Message();
-                msg.obj = acount;
-                handler.sendMessage(msg);
-            }
+        new Thread(() -> {
+            //导入excel表格
+            String txtName1 = CustomerApplication.getInstance().getString(R.string.path_import) + txtName + ".xls";
+            File file = new File(txtName1);
+            final int acount = ExcelHelper.readExcelFile(file);
+            Message msg = new Message();
+            msg.obj = acount;
+            handler.sendMessage(msg);
         }).start();
 
 

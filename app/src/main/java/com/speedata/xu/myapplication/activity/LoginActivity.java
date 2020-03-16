@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -40,6 +39,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private SharedPreferences.Editor ed;
 
 
+    @SuppressLint("ApplySharedPref")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,22 +88,15 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             }
         }
 
-        sbtnRememberPassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @SuppressLint("ApplySharedPref")
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                ed.putBoolean("ISCHECK", isChecked);
-                ed.commit();
-            }
+        sbtnRememberPassword.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            ed.putBoolean("ISCHECK", isChecked);
+            ed.commit();
         });
         boolean value1 = sp.getBoolean("AUTO_ISCHECK", false);
         sbtnAutoLogin.setChecked(value1);
-        sbtnAutoLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                ed.putBoolean("AUTO_ISCHECK", isChecked);
-                ed.commit();
-            }
+        sbtnAutoLogin.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            ed.putBoolean("AUTO_ISCHECK", isChecked);
+            ed.commit();
         });
 
 

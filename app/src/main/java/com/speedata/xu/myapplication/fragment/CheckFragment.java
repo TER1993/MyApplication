@@ -236,107 +236,95 @@ public class CheckFragment extends BaseScanFragment implements View.OnClickListe
 
                 TextView tvCount = helper.getView(R.id.check_sum_tv);
 
-                tvCount.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                tvCount.setOnClickListener(v -> {
 
-                        application.setBposition(position);
-                        DialogButtonOnClickListener2 dialogButtonOnClickListener = new DialogButtonOnClickListener2();
-                        etCount = new EditText(mActivity);
-                        mDialog = new AlertDialog.Builder(mActivity)
-                                .setTitle(R.string.check_title_number)
-                                .setView(etCount)
-                                .setPositiveButton(R.string.check_sure_button, dialogButtonOnClickListener)
-                                .setNegativeButton(R.string.check_miss_button, dialogButtonOnClickListener)
-                                .show();
+                    application.setBposition(position);
+                    DialogButtonOnClickListener2 dialogButtonOnClickListener = new DialogButtonOnClickListener2();
+                    etCount = new EditText(mActivity);
+                    mDialog = new AlertDialog.Builder(mActivity)
+                            .setTitle(R.string.check_title_number)
+                            .setView(etCount)
+                            .setPositiveButton(R.string.check_sure_button, dialogButtonOnClickListener)
+                            .setNegativeButton(R.string.check_miss_button, dialogButtonOnClickListener)
+                            .show();
 
-                        lvcheck.setSelection(position);
-                    }
+                    lvcheck.setSelection(position);
                 });
 
 
                 TextView tvAdd = helper.getView(R.id.check_add_tv);
 
-                tvAdd.setOnClickListener(new TextView.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                tvAdd.setOnClickListener(v -> {
 
-                        CheckDetailInfor bean;
-                        bean = checkDetailInfors.get(position);
-                        String count = bean.getGoodsCount();
-                        //判断String字符串是否为数字，否则不支持加减操作
-                        if (!ToolCommon.isNumeric(count)) {
-                            Toast.makeText(mContext, "此数量非纯数字，不支持加减操作", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        int b = Integer.parseInt(count);
-                        b++;
-                        count = b + "";
-                        bean.setGoodsCount(count);
-                        checkDetailInfors.get(position).setGoodsCount(count);
-
-                        setAdapterMethod();
-                        lvcheck.setSelection(position);
-                        application.setCheckDetailInfo(bean);
-
-
+                    CheckDetailInfor bean;
+                    bean = checkDetailInfors.get(position);
+                    String count = bean.getGoodsCount();
+                    //判断String字符串是否为数字，否则不支持加减操作
+                    if (!ToolCommon.isNumeric(count)) {
+                        Toast.makeText(mContext, "此数量非纯数字，不支持加减操作", Toast.LENGTH_SHORT).show();
+                        return;
                     }
+                    int b = Integer.parseInt(count);
+                    b++;
+                    count = b + "";
+                    bean.setGoodsCount(count);
+                    checkDetailInfors.get(position).setGoodsCount(count);
+
+                    setAdapterMethod();
+                    lvcheck.setSelection(position);
+                    application.setCheckDetailInfo(bean);
+
+
                 });
 
 
                 TextView tvSub = helper.getView(R.id.check_sub_tv);
 
-                tvSub.setOnClickListener(new TextView.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                tvSub.setOnClickListener(v -> {
 
 
-                        CheckDetailInfor bean;
-                        bean = checkDetailInfors.get(position);
-                        String count = bean.getGoodsCount();
-                        //判断String字符串是否为数字，否则不支持加减操作
-                        if (!ToolCommon.isNumeric(count)) {
-                            Toast.makeText(mContext, "此数量的格式，不支持加减操作", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        int b = Integer.parseInt(count);
-                        if (b == 0) {
-                            Toast.makeText(mContext, "货品数量不能小于0", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        b--;
-                        count = b + "";
-                        bean.setGoodsCount(count);
-
-                        checkDetailInfors.get(position).setGoodsCount(count);
-                        setAdapterMethod();
-                        lvcheck.setSelection(position);
-                        application.setCheckDetailInfo(bean);
-
+                    CheckDetailInfor bean;
+                    bean = checkDetailInfors.get(position);
+                    String count = bean.getGoodsCount();
+                    //判断String字符串是否为数字，否则不支持加减操作
+                    if (!ToolCommon.isNumeric(count)) {
+                        Toast.makeText(mContext, "此数量的格式，不支持加减操作", Toast.LENGTH_SHORT).show();
+                        return;
                     }
+                    int b = Integer.parseInt(count);
+                    if (b == 0) {
+                        Toast.makeText(mContext, "货品数量不能小于0", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    b--;
+                    count = b + "";
+                    bean.setGoodsCount(count);
+
+                    checkDetailInfors.get(position).setGoodsCount(count);
+                    setAdapterMethod();
+                    lvcheck.setSelection(position);
+                    application.setCheckDetailInfo(bean);
+
                 });
 
                 TextView tvDelete = helper.getView(R.id.check_delete_tv);
 
-                tvDelete.setOnClickListener(new TextView.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        CheckDetailInfor bean;
-                        bean = checkDetailInfors.get(position);
-                        application.setCheckDetailInfo(bean);
+                tvDelete.setOnClickListener(v -> {
+                    CheckDetailInfor bean;
+                    bean = checkDetailInfors.get(position);
+                    application.setCheckDetailInfo(bean);
 
-                        DialogButtonOnClickListener dialogButtonOnClickListener = new DialogButtonOnClickListener();
+                    DialogButtonOnClickListener dialogButtonOnClickListener = new DialogButtonOnClickListener();
 
-                        mDialog = new AlertDialog.Builder(mActivity)
-                                .setTitle(getString(R.string.check_del_ask) + bean.getGoodsNum() + getString(R.string.check_ask_end))
-                                .setPositiveButton(R.string.sure, dialogButtonOnClickListener)
-                                .setNegativeButton(R.string.miss, dialogButtonOnClickListener)
-                                .show();
+                    mDialog = new AlertDialog.Builder(mActivity)
+                            .setTitle(getString(R.string.check_del_ask) + bean.getGoodsNum() + getString(R.string.check_ask_end))
+                            .setPositiveButton(R.string.sure, dialogButtonOnClickListener)
+                            .setNegativeButton(R.string.miss, dialogButtonOnClickListener)
+                            .show();
 
 
-                        lvcheck.setSelection(position);
+                    lvcheck.setSelection(position);
 
-                    }
                 });
 
                 TextView tvPrice = helper.getView(R.id.check_price_tv);

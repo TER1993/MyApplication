@@ -14,13 +14,7 @@ public abstract class BaseScanFragment extends BaseFragment implements IBaseScan
     public void onResume() {
         super.onResume();
         scanUtil = new ScanUtil(mActivity);
-        scanUtil.setOnScanListener(new ScanUtil.OnScanListener() {
-
-            @Override
-            public void getBarcode(String barcode) {
-                onGetBarcode(barcode);
-            }
-        });
+        scanUtil.setOnScanListener(this::onGetBarcode);
     }
 
     @Override

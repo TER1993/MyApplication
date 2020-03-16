@@ -81,54 +81,6 @@ public class ViewHolder {
         return this;
     }
 
-    /**
-     * 为ImageView设置图片
-     *
-     * @param viewId
-     * @param drawableId
-     * @return
-     */
-//    public ViewHolder setImageResource(int viewId, int drawableId) {
-//        ImageView view = getView(viewId);
-//        view.setImageResource(drawableId);
-//
-//        return this;
-//    }
-
-    /**
-     * 为ImageView设置图片
-     *
-     * @param viewId
-     * @param drawableId
-     * @return
-     */
-//    public ViewHolder setImageBitmap(int viewId, int bm) {
-//        ImageView view = getView(viewId);
-//        view.setImageResource(bm);
-////        view.setImageBitmap(bm);
-//        return this;
-//    }
-
-    /**
-     * 为ImageView设置图片
-     *
-     * @param viewId
-     * @param drawableId
-     * @return
-     */
-//    public ViewHolder setImageURL(int viewId, String url) {
-//        ImageView view = getView(viewId);
-//        AsyncBitmapLoader abl = new AsyncBitmapLoader();
-//        abl.loadBitmap(view, url, new ImageCallBack() {
-//
-//            @Override
-//            public void imageLoad(ImageView imageView, Bitmap bitmap) {
-//                imageView.setImageBitmap(bitmap);
-//            }
-//        });
-//
-//        return this;
-//    }
 
 }
 
