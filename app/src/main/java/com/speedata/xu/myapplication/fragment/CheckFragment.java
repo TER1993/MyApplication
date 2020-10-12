@@ -23,6 +23,7 @@ import com.speedata.xu.myapplication.db.dao.CheckDetailInforDao;
 import com.speedata.xu.myapplication.db.dao.FloorInforDao;
 import com.speedata.xu.myapplication.utils.MyDateAndTime;
 import com.speedata.xu.myapplication.utils.PlaySoundPool;
+import com.speedata.xu.myapplication.utils.ToastUtils;
 import com.speedata.xu.myapplication.utils.ToolCommon;
 
 import java.util.List;
@@ -130,7 +131,6 @@ public class CheckFragment extends BaseScanFragment implements View.OnClickListe
 
         }
 
-
     }
 
     private void saveData() {
@@ -156,7 +156,6 @@ public class CheckFragment extends BaseScanFragment implements View.OnClickListe
 
         Toast.makeText(mContext, R.string.check_success, Toast.LENGTH_SHORT).show();
 
-
     }
 
     private void searchInfor() {
@@ -170,7 +169,6 @@ public class CheckFragment extends BaseScanFragment implements View.OnClickListe
             return;
         }
 
-
         if (number.length() == 2) {
             for (int i = 0; i < checkDetailInfors.size(); i++) {
                 CheckDetailInfor a = checkDetailInfors.get(i);
@@ -182,19 +180,18 @@ public class CheckFragment extends BaseScanFragment implements View.OnClickListe
                     return;
                 }
 
-
             }
         }
-
 
         String checkid = getArguments().getString("CcheckTime");
 
         List<BaseInfor> baseInfors = baseInforDao.imQueryList("GoodsNum=?", new String[]{number});
         if (baseInfors.isEmpty()) {
-            Toast.makeText(mContext, R.string.check_number_right, Toast.LENGTH_SHORT).show();
             PlaySoundPool.getPlaySoundPool(mActivity).playError();
+            ToastUtils.showShortToastSafe(R.string.check_number_right);
             return;
         }
+        PlaySoundPool.getPlaySoundPool(mActivity).playLaser();
         BaseInfor bean;
         bean = baseInfors.get(0);
 
@@ -217,10 +214,8 @@ public class CheckFragment extends BaseScanFragment implements View.OnClickListe
     private void setAdapterMethod() {
         etNum.setText("");
 
-
         adapter = new CommonAdapter<CheckDetailInfor>(mActivity, checkDetailInfors, R.layout
                 .check_item) {
-
 
             @Override
             public void convert(ViewHolder helper, CheckDetailInfor item, final int position) {
@@ -230,9 +225,7 @@ public class CheckFragment extends BaseScanFragment implements View.OnClickListe
                 helper.setText(R.id.check_sum_tv, item.getGoodsCount());
                 helper.setText(R.id.check_time_tv, item.getCheckDetailTime());
 
-
                 helper.getView(R.layout.check_item);
-
 
                 TextView tvCount = helper.getView(R.id.check_sum_tv);
 
@@ -250,7 +243,6 @@ public class CheckFragment extends BaseScanFragment implements View.OnClickListe
 
                     lvcheck.setSelection(position);
                 });
-
 
                 TextView tvAdd = helper.getView(R.id.check_add_tv);
 
@@ -274,14 +266,11 @@ public class CheckFragment extends BaseScanFragment implements View.OnClickListe
                     lvcheck.setSelection(position);
                     application.setCheckDetailInfo(bean);
 
-
                 });
-
 
                 TextView tvSub = helper.getView(R.id.check_sub_tv);
 
                 tvSub.setOnClickListener(v -> {
-
 
                     CheckDetailInfor bean;
                     bean = checkDetailInfors.get(position);
@@ -322,7 +311,6 @@ public class CheckFragment extends BaseScanFragment implements View.OnClickListe
                             .setNegativeButton(R.string.miss, dialogButtonOnClickListener)
                             .show();
 
-
                     lvcheck.setSelection(position);
 
                 });
@@ -340,7 +328,6 @@ public class CheckFragment extends BaseScanFragment implements View.OnClickListe
                     tvPrice.setVisibility(View.VISIBLE);
                 }
 
-
             }
 
         };
@@ -354,9 +341,8 @@ public class CheckFragment extends BaseScanFragment implements View.OnClickListe
         etNum.setText(barcode);
 //        btnSearch.performClick();
         searchInfor();
-        PlaySoundPool.getPlaySoundPool(mActivity).playLaser();
-    }
 
+    }
 
     /**
      * 退出时的对话框的按钮点击事件

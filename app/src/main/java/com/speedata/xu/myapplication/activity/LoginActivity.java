@@ -56,14 +56,11 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         Switch sbtnAutoLogin = findViewById(R.id.login_autologin_sbtn);
         Switch sbtnRememberPassword = findViewById(R.id.login_rememberpassword_sbtn);
 
-
         btnLogin = findViewById(R.id.login_in_btn);
         btnFinish = findViewById(R.id.login_out_btn);
 
-
         btnLogin.setOnClickListener(this);
         btnFinish.setOnClickListener(this);
-
 
         if (android.os.Build.MODEL.equalsIgnoreCase(getString(R.string.sd60prt)) || android.os.Build.MODEL.equalsIgnoreCase(getString(R.string.sd55))) {
             Toast.makeText(mContext, "ok," + Build.MODEL
@@ -75,7 +72,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         }
 
         newFile();
-
 
         SharedPreferences sp = getSharedPreferences("users", MODE_PRIVATE);
         ed = sp.edit();
@@ -99,16 +95,13 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             ed.commit();
         });
 
-
         if (sbtnAutoLogin.isChecked() && sbtnRememberPassword.isChecked()) {
             if (application.getChangeuser() == 1) {
                 btnLogin.performClick();
             }
         }
 
-
     }
-
 
     private void newFile() {
         File file = new File(getString(R.string.import_path));
@@ -122,7 +115,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         }
 
     }
-
 
     @Override
     public void onClick(View v) {
@@ -172,7 +164,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     }
 
-
     /**
      * 获取当前应用程序的版本号
      */
@@ -190,7 +181,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             return wrongVersion;
         }
     }
-
 
 }
 
